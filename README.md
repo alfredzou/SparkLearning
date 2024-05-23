@@ -1,11 +1,12 @@
 # SparkLearning
 
 # WSL Installation
-install pyspark
+install pyspark option 3 https://spark.apache.org/downloads.html
+* download spark from 
 ``` bash
-python3 -m venv venv
-source venv/bin/activate
-pip install pyspark==3.5.1
+wget https://dlcdn.apache.org/spark/spark-3.5.1/spark-3.5.1-bin-hadoop3.tgz
+tar xzf spark-3.5.1-bin-hadoop3.tgz
+rm spark-3.5.1-bin-hadoop3.tgz
 ```
 
 install java
@@ -14,10 +15,16 @@ wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz
 tar xzfv jdk-17_linux-x64_bin.tar.gz
 ```
 
-add to bottom of ~/.bashrc
+nano ~/.bashrc and add to bottom of ~/.bashrc
 ``` 
+export SPARK_HOME="/mnt/c/Users/Admin/Desktop/gitclones/spark/spark-3.5.1-bin-hadoop3"
+export PATH="${SPARK_HOME}/bin:${PATH}"
+
 export JAVA_HOME="/mnt/c/Users/Admin/Desktop/gitclones/spark/jdk-17.0.11"
 export PATH="${JAVA_HOME}/bin:${PATH}"
+
+export PYTHONPATH="${SPARK_HOME}/python/:$PYTHONPATH"
+export PYTHONPATH="${SPARK_HOME}/python/lib/py4j-0.10.9.7-src.zip:$PYTHONPATH"
 ```
 
 # PySpark basics
@@ -117,6 +124,22 @@ hadoop_conf.set("fs.AbstractFileSystem.gs.impl",  "com.google.cloud.hadoop.fs.gc
 hadoop_conf.set("fs.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem")
 hadoop_conf.set("fs.gs.auth.service.account.json.keyfile", credentials_location)
 hadoop_conf.set("fs.gs.auth.service.account.enable", "true")
+```
+
+Create master and workers
+``` bash
+# master
+bash ./sbin/start-master.sh
+
+# worker
+bash ./sbin/start-master.sh spark://DESKTOP-RJFPN4L.:7077
+
+# submitting spark jobs
+spark-submit --master="spark://DESKTOP-RJFPN4L.:7077" 05_spark_cluster.py
+
+# stop master and worker
+bash ./sbin/stop-worker.sh
+bash ./sbin/stop-master.sh
 ```
 
 # Actions vs transformations
